@@ -33,3 +33,11 @@
 .detail-note { background:#eaf1ef; border:1px solid #dce7e3; border-radius:12px; max-width:570px; padding:17px; color:#60706f; font-size:12px; line-height:1.6; margin-top:25px; }.detail-note strong { color:var(--ink); }
 .benefits-card { background:white; border:1px solid var(--line); border-radius:16px; padding:20px 17px; align-self:start; }.benefits-card h3 { margin:0 0 17px; font-size:14px; font-weight:600; }.benefits-card p { color:#536170; font-size:11px; margin:12px 0; }.benefits-card p::first-letter { color:#7dbc23; }.benefits-card hr { border:0; border-top:1px solid var(--line); margin:20px 0 15px; }.benefits-card small { color:#7b8794; font-size:11px; display:block; margin-bottom:9px; }.benefits-card .button { width:100%; justify-content:center; padding:11px 10px; margin-top:5px; }.button.light { color:var(--ink); border:1px solid var(--line); background:white; }
 @media (max-width: 760px) { .hero-image { height:280px; }.detail-hero { display:block; padding:48px 20px 65px; }.detail-hero h1 { font-size:53px; }.detail-hero-copy .back-link { margin-bottom:35px; }.detail-hero-image { height:245px; margin-top:35px; transform:none; }.detail-facts { grid-template-columns:1fr; gap:18px; padding:24px 20px; }.detail-content { display:block; padding:55px 20px 70px; }.benefits-card { margin-top:35px; }.detail-note { margin-bottom:0; } }
+
+.site-footer .footer-grid { padding-top:38px; padding-bottom:28px; gap:25px; }
+.site-footer .footer-brand { margin-bottom:12px; }
+.site-footer .footer-grid p { margin-bottom:12px; }
+.site-footer .footer-grid h4 { margin-top:2px; margin-bottom:12px; }
+.site-footer .footer-grid button { margin-bottom:8px; }
+.site-footer .footer-bottom { padding-top:13px; padding-bottom:13px; }
+@media (max-width: 760px) { .site-footer .footer-grid { padding-top:30px; padding-bottom:20px; gap:24px 18px; }.site-footer .footer-bottom { padding-top:12px; padding-bottom:12px; } }
