@@ -42,7 +42,19 @@ function Home({ onNavigate }) {
 
 function WorkoutCard({ workout, onClick }) { return <button className="workout-card" onClick={onClick}><div className="card-image" style={{ backgroundImage: `url(${workout.image})` }}><span className={`intensity ${workout.accent}`}>{workout.label.split(' ')[0]}</span><span className="card-icon">{workout.icon}</span></div><div className="card-body"><div className="card-title"><strong>{workout.name}</strong><Arrow /></div><p>{workout.description}</p><small>◷ &nbsp; {workout.duration}</small></div></button> }
 
-function Schedule() { return <section className="page-section schedule-page"><span className="eyebrow">ГРАФИК</span><h1>Седмична програма</h1><p className="lead">Разгледай кога се провеждат груповите тренировки. Часовете може да се променят по празници — за актуален график се обади на <a href="tel:0894026402">089 402 6402</a>.</p><div className="schedule-grid">{schedule.map((day) => <article className="day-card" key={day.day}><h3>{day.day}</h3>{day.classes.map(([time, name]) => <div className="class-row" key={`${time}-${name}`}><time>{time}</time><span>{name}</span></div>)}</article>)}</div><div className="schedule-note"><span>✣</span><p><strong>Нужно е предварително записване само за тренировки на Канго Джъмпс.</strong><br />Телефон за записване: <a href="tel:0894026402">089 402 6402</a></p></div></section> }
+function workoutSlugFromClass(className) {
+  if (className.startsWith('Табата')) return 'tabata'
+  if (className.startsWith('Фитбол')) return 'fitball'
+  if (className.startsWith('Йога')) return 'yoga'
+  if (className.startsWith('Пилатес')) return 'pilates'
+  if (className.startsWith('Каланетика')) return 'callanetics'
+  if (className.startsWith('Народни танци')) return 'folk-dance'
+  return null
+}
+
+function Schedule({ onNavigate }) {
+  return <section className="page-section schedule-page"><span className="eyebrow">ГРАФИК</span><h1>Седмична програма</h1><p className="lead">Разгледай кога се провеждат груповите тренировки. Часовете може да се променят по празници — за актуален график се обади на <a href="tel:0894026402">089 402 6402</a>.</p><div className="schedule-grid">{schedule.map((day) => <article className="day-card" key={day.day}><h3>{day.day}</h3>{day.classes.map(([time, name]) => { const workoutSlug = workoutSlugFromClass(name); const classContent = <><time>{time}</time><span>{name}</span>{workoutSlug && <Arrow />}</>; return workoutSlug ? <button className="class-row class-link" key={`${time}-${name}`} onClick={() => onNavigate(workoutSlug)}>{classContent}</button> : <div className="class-row" key={`${time}-${name}`}>{classContent}</div> })}</article>)}</div><div className="schedule-note"><span>✣</span><p><strong>Нужно е предварително записване само за тренировки на Канго Джъмпс.</strong><br />Телефон за записване: <a href="tel:0894026402">089 402 6402</a></p></div></section>
+}
 
 function Workouts({ onNavigate }) { return <section className="page-section workouts-page"><span className="eyebrow">НАШИЯТ ФОКУС</span><h1>Групови тренировки</h1><p className="lead">В ATOM залагаме на груповите тренировки, защото те съчетават мотивация, професионално ръководство и добро настроение.</p><div className="all-workouts">{workouts.map((workout, index) => <WorkoutCard key={workout.slug} workout={workout} index={index % 3} onClick={() => onNavigate(workout.slug)} />)}</div></section> }
 
@@ -52,7 +64,7 @@ function App() {
   const [page, setPage] = useState(window.location.hash.replace('#/', '') || 'home')
   const navigate = (nextPage) => { window.location.hash = `/${nextPage}`; setPage(nextPage); window.scrollTo(0, 0) }
   const detailWorkout = workouts.find((workout) => workout.slug === page)
-  return <div className="app-shell"><Header page={detailWorkout ? 'workouts' : page} onNavigate={navigate} /><main>{page === 'home' && <Home onNavigate={navigate} />}{page === 'schedule' && <Schedule />}{page === 'workouts' && <Workouts onNavigate={navigate} />}{detailWorkout && <WorkoutDetail workout={detailWorkout} onNavigate={navigate} />}</main><Footer onNavigate={navigate} /></div>
+  return <div className="app-shell"><Header page={detailWorkout ? 'workouts' : page} onNavigate={navigate} /><main>{page === 'home' && <Home onNavigate={navigate} />}{page === 'schedule' && <Schedule onNavigate={navigate} />}{page === 'workouts' && <Workouts onNavigate={navigate} />}{detailWorkout && <WorkoutDetail workout={detailWorkout} onNavigate={navigate} />}</main><Footer onNavigate={navigate} /></div>
 }
 
 export default App
