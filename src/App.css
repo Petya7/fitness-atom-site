@@ -40,4 +40,6 @@
 .site-footer .footer-grid h4 { margin-top:2px; margin-bottom:12px; }
 .site-footer .footer-grid button { margin-bottom:8px; }
 .site-footer .footer-bottom { padding-top:13px; padding-bottom:13px; }
+.home-cta { max-width:790px; margin:68px auto; padding:40px 24px 42px; border-radius:25px; background:var(--ink); color:white; text-align:center; }.home-cta h2 { margin:0; font-size:27px; line-height:1.15; letter-spacing:-.8px; font-weight:500; }.home-cta p { color:#aab5c0; font-size:12px; line-height:1.55; margin:17px 0 20px; }.home-cta-actions { display:flex; justify-content:center; gap:9px; }.home-cta-actions .button { padding:12px 18px; font-size:11px; }
 @media (max-width: 760px) { .site-footer .footer-grid { padding-top:30px; padding-bottom:20px; gap:24px 18px; }.site-footer .footer-bottom { padding-top:12px; padding-bottom:12px; } }
+@media (max-width: 760px) { .home-cta { margin:48px 20px; padding:32px 18px 34px; border-radius:20px; }.home-cta h2 { font-size:24px; }.home-cta p br { display:none; }.home-cta-actions { flex-direction:column; align-items:stretch; }.home-cta-actions .button { justify-content:center; } }
