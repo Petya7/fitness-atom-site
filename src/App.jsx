@@ -23,7 +23,7 @@ const schedule = [
 function Arrow() { return <span aria-hidden="true">↗</span> }
 
 function AtomLogo({ footer = false }) {
-  return <span className={footer ? 'logo-lockup footer-logo' : 'logo-lockup'}><span className="logo-symbol" aria-hidden="true"><span className="logo-cut logo-cut-one"></span><span className="logo-cut logo-cut-two"></span></span><span className="logo-word">ATOM<span className="logo-dot">.</span>{footer && <small>MY FITNESS</small>}</span></span>
+  return <span className={footer ? 'logo-lockup footer-logo' : 'logo-lockup'}><span className="logo-symbol" aria-hidden="true">A</span><span className="logo-word">ATOM<span className="logo-dot">.</span>{footer && <small>MY FITNESS</small>}</span></span>
 }
 
 function Header({ page, onNavigate }) {
