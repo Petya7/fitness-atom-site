@@ -23,6 +23,13 @@ dist-ssr
 *.sln
 *.sw?
 
-# Local design references
+# Reference screenshots and mockup images
+*Screenshot*
 *example*.png
-Prompt.txt
+*example*.jpg
+*example*.jpeg
+*Page example*.png
+*Homepage example*.png
+*Footer example*.png
+*Program example*.png
+*Page example2*.png
