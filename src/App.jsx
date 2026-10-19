@@ -21,8 +21,8 @@ const schedule = [
   { day: 'Неделя', classes: [['10:00', 'Каланетика'], ['15:30', 'Народни танци за деца'], ['16:30', 'Пилатес (стречинг)'], ['17:30', 'Табата'], ['18:30', 'Канго Джъмпс']] },
 ]
 
-function AtomLogo({ footer = false }) {
-  return <span className={footer ? 'logo-lockup footer-logo' : 'logo-lockup'}><span className="logo-symbol" aria-hidden="true">A</span><span className="logo-word">ATOM<span className="logo-dot">.</span>{footer && <small>MY FITNESS</small>}</span></span>
+function AtomLogo({ footer = false, subtitle = false }) {
+  return <span className={footer ? 'logo-lockup footer-logo' : 'logo-lockup'}><span className="logo-symbol" aria-hidden="true">A</span><span className="logo-word">ATOM<span className="logo-dot">.</span>{(footer || subtitle) && <small>MY FITNESS</small>}</span></span>
 }
 
 function Header({ page, onNavigate }) {
@@ -34,7 +34,7 @@ function Header({ page, onNavigate }) {
     setWorkoutMenuOpen(false)
   }
 
-  return <header className="site-header"><div className="header-inner"><button className="brand" onClick={() => { onNavigate('home'); closeMenu() }} aria-label="ATOM My Fitness - начало"><AtomLogo /></button><button className="mobile-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label="Отвори меню">{menuOpen ? '×' : '☰'}</button><nav className={menuOpen ? 'main-nav is-open' : 'main-nav'}><button className={page === 'home' ? 'nav-link active' : 'nav-link'} onClick={() => { onNavigate('home'); closeMenu() }}>Начало</button><button className={page === 'schedule' ? 'nav-link active' : 'nav-link'} onClick={() => { onNavigate('schedule'); closeMenu() }}>Програма</button><div className={workoutMenuOpen ? 'workout-menu is-open' : 'workout-menu'} onMouseEnter={() => setWorkoutMenuOpen(true)} onMouseLeave={() => setWorkoutMenuOpen(false)} onFocusCapture={() => setWorkoutMenuOpen(true)} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setWorkoutMenuOpen(false) }}><button className={page === 'workouts' ? 'nav-link active' : 'nav-link'} onClick={() => { onNavigate('workouts'); closeMenu() }}>Групови тренировки <span className="chevron">⌄</span></button><div className="dropdown">{workouts.map((workout) => <button key={workout.slug} onClick={() => { onNavigate(workout.slug); closeMenu() }}><span>{workout.name}</span></button>)}</div></div><a className="phone-pill" href="tel:0894026402">089 402 6402</a></nav></div></header>
+  return <header className="site-header"><div className="header-inner"><button className="brand" onClick={() => { onNavigate('home'); closeMenu() }} aria-label="ATOM My Fitness - начало"><AtomLogo subtitle /></button><button className="mobile-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label="Отвори меню">{menuOpen ? '×' : '☰'}</button><nav className={menuOpen ? 'main-nav is-open' : 'main-nav'}><button className={page === 'home' ? 'nav-link active' : 'nav-link'} onClick={() => { onNavigate('home'); closeMenu() }}>Начало</button><button className={page === 'schedule' ? 'nav-link active' : 'nav-link'} onClick={() => { onNavigate('schedule'); closeMenu() }}>Програма</button><div className={workoutMenuOpen ? 'workout-menu is-open' : 'workout-menu'} onMouseEnter={() => setWorkoutMenuOpen(true)} onMouseLeave={() => setWorkoutMenuOpen(false)} onFocusCapture={() => setWorkoutMenuOpen(true)} onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setWorkoutMenuOpen(false) }}><button className={page === 'workouts' ? 'nav-link active' : 'nav-link'} onClick={() => { onNavigate('workouts'); closeMenu() }}>Групови тренировки <span className="chevron">⌄</span></button><div className="dropdown">{workouts.map((workout) => <button key={workout.slug} onClick={() => { onNavigate(workout.slug); closeMenu() }}><span>{workout.name}</span></button>)}</div></div><a className="phone-pill" href="tel:0894026402">089 402 6402</a></nav></div></header>
 }
 
 function Footer({ onNavigate }) {
