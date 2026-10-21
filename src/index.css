@@ -1,3 +1,6 @@
+@import "tailwindcss/theme.css";
+@import "tailwindcss/utilities.css";
+
 :root { font-family: 'Trebuchet MS', 'Segoe UI', sans-serif; color: #10151d; background: #f3f7f8; font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; }
