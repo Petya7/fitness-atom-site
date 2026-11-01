@@ -55,24 +55,34 @@ test.describe('Back button', () => {
     await expect(heading(page)).toHaveText('Пилатес')
   })
 
-  test('returns to the same spot on the page, not the top', async ({ page }) => {
-    // Open each workout card on the home page, go back, and check we land on that card again.
-    // Before the fix this failed only some of the time, so every card is tried.
+  test('opens the previous page at the top, on Back and on Forward', async ({ page }) => {
+    // Scroll down the home page, open each workout card, scroll down the workout page,
+    // then go back and forward: both pages must open at the top every time.
+    const scrollY = () => page.evaluate(() => Math.round(window.scrollY))
     await page.goto('/')
     for (const name of ['Табата', 'Фитбол', 'Йога', 'Пилатес', 'Каланетика', 'Народни танци']) {
+      await expect(heading(page)).toContainText('Груповите тренировки')
       const card = page.locator('main .workout-card', { hasText: name })
       await card.scrollIntoViewIfNeeded()
-      const scrollBefore = await page.evaluate(() => Math.round(window.scrollY))
+      expect(await scrollY(), `home page is scrolled down to ${name}`).toBeGreaterThan(300)
 
       await card.click()
       await expect(heading(page)).toHaveText(name)
-      await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
+      await page.mouse.wheel(0, 600)
+      await expect.poll(scrollY).toBeGreaterThan(300)
       await page.waitForTimeout(400) // look at the page for a moment, like a real visitor
 
       await page.goBack()
       await expect(heading(page)).toContainText('Груповите тренировки')
-      await page.waitForTimeout(300) // give a late, wrong scroll jump time to show up
-      expect(Math.abs(await page.evaluate(() => Math.round(window.scrollY)) - scrollBefore), `scroll after going back from ${name}`).toBeLessThanOrEqual(5)
+      await page.waitForTimeout(300) // give a late scroll jump time to show up
+      expect(await scrollY(), `scroll after going back from ${name}`).toBe(0)
+
+      await page.goForward()
+      await expect(heading(page)).toHaveText(name)
+      await page.waitForTimeout(300)
+      expect(await scrollY(), `scroll after going forward to ${name}`).toBe(0)
+
+      await page.goBack()
     }
   })
 

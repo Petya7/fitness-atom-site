@@ -113,41 +113,27 @@ function WorkoutDetail({ workout, onNavigate }) {
 
 const pageFromHash = () => window.location.hash.replace('#/', '') || 'home'
 
-// Each browser history step remembers how far down its page the visitor had scrolled.
-const savedScroll = () => window.history.state?.scrollY ?? 0
-const saveScroll = () => window.history.replaceState({ ...window.history.state, scrollY: window.scrollY }, '')
-
 function App() {
   const [page, setPage] = useState(pageFromHash)
 
   useEffect(() => {
-    // We put the scroll position back ourselves. If the browser does it, it sometimes scrolls
-    // before the previous page is drawn and lands in the wrong place.
+    // Every page opens at the top, including when the visitor uses Back or Forward,
+    // so turn off the browser's own "return to where you were" scrolling.
     window.history.scrollRestoration = 'manual'
-    window.scrollTo(0, savedScroll())
-
-    let saveTimer
-    const rememberScroll = () => { clearTimeout(saveTimer); saveTimer = setTimeout(saveScroll, 150) }
 
     // The browser/phone Back and Forward buttons change the #/page part of the address
     // without calling navigate(), so listen for that change, show the matching page
-    // straight away, then scroll to where the visitor was on it.
+    // straight away, then scroll to its top.
     const showPageFromAddress = () => {
-      clearTimeout(saveTimer)
       flushSync(() => setPage(pageFromHash()))
-      window.scrollTo(0, savedScroll())
+      window.scrollTo(0, 0)
     }
 
-    window.addEventListener('scroll', rememberScroll, { passive: true })
     window.addEventListener('hashchange', showPageFromAddress)
-    return () => {
-      clearTimeout(saveTimer)
-      window.removeEventListener('scroll', rememberScroll)
-      window.removeEventListener('hashchange', showPageFromAddress)
-    }
+    return () => window.removeEventListener('hashchange', showPageFromAddress)
   }, [])
 
-  const navigate = (nextPage) => { saveScroll(); window.location.hash = `/${nextPage}`; setPage(nextPage); window.scrollTo(0, 0) }
+  const navigate = (nextPage) => { window.location.hash = `/${nextPage}`; setPage(nextPage); window.scrollTo(0, 0) }
   const detailWorkout = workouts.find((workout) => workout.slug === page)
   // key={page} gives the header a fresh state on every page change, so an open mobile menu closes when the user goes back.
   return <div className="app-shell"><Header key={page} page={detailWorkout ? 'workouts' : page} onNavigate={navigate} /><main>{page === 'home' && <Home onNavigate={navigate} />}{page === 'schedule' && <Schedule onNavigate={navigate} />}{page === 'workouts' && <Workouts onNavigate={navigate} />}{detailWorkout && <WorkoutDetail workout={detailWorkout} onNavigate={navigate} />}</main><Footer onNavigate={navigate} /></div>
