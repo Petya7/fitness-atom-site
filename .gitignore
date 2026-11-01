@@ -33,3 +33,7 @@ dist-ssr
 *Footer example*.png
 *Program example*.png
 *Page example2*.png
+
+# Playwright test output
+test-results
+playwright-report

@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { ChevronDown, Clock3, Flame, MapPin, Phone, Sparkles, Target, UserRoundCheck, UsersRound } from 'lucide-react'
 import './App.css'
 
@@ -110,11 +111,32 @@ function WorkoutDetail({ workout, onNavigate }) {
 
   return <><section className="detail-hero" style={{ '--detail-bg': `url(${workout.image})` }}><div className="detail-hero-inner"><div className="detail-hero-copy"><button className="back-link" onClick={() => onNavigate('workouts')}>Всички тренировки</button><span className="eyebrow">ГРУПОВА ТРЕНИРОВКА</span><h1>{workout.name}</h1><p>{workout.description}</p></div><div className="detail-hero-image"><img src={workout.image} alt={`Илюстрация за ${workout.name}`} /></div></div></section><section className="detail-facts"><div className="detail-facts-inner">{factItems.map(({ icon: Icon, label, value }) => <div className="fact-item" key={label}><span className="fact-icon"><Icon size={16} strokeWidth={1.8} /></span><div className="fact-copy"><small>{label}</small><strong>{value}</strong></div></div>)}</div></section><section className="detail-content"><div><span className="eyebrow">В ДЕТАЙЛ</span><h2>Какво представлява</h2><p>{workout.description} В ATOM тренировката е водена от инструктор и е съобразена с ритъма на групата.</p><p>{workout.suitable}</p><div className="detail-note"><strong>Няма нужда да си професионалист.</strong><br />Ела с удобни дрехи, добро настроение и желание за движение.</div></div><aside className="benefits-card"><h3>Какво печелиш</h3>{workout.benefits.map((benefit) => <p key={benefit}>✓ &nbsp; {benefit}</p>)}<hr /><small>Искаш да пробваш {workout.name}?</small><a className="button primary" href="tel:0894026402">Запиши се: 089 402 6402</a><button className="button secondary light" onClick={() => onNavigate('schedule')}>Виж програмата</button></aside></section></> }
 
+const pageFromHash = () => window.location.hash.replace('#/', '') || 'home'
+
 function App() {
-  const [page, setPage] = useState(window.location.hash.replace('#/', '') || 'home')
+  const [page, setPage] = useState(pageFromHash)
+
+  useEffect(() => {
+    // Every page opens at the top, including when the visitor uses Back or Forward,
+    // so turn off the browser's own "return to where you were" scrolling.
+    window.history.scrollRestoration = 'manual'
+
+    // The browser/phone Back and Forward buttons change the #/page part of the address
+    // without calling navigate(), so listen for that change, show the matching page
+    // straight away, then scroll to its top.
+    const showPageFromAddress = () => {
+      flushSync(() => setPage(pageFromHash()))
+      window.scrollTo(0, 0)
+    }
+
+    window.addEventListener('hashchange', showPageFromAddress)
+    return () => window.removeEventListener('hashchange', showPageFromAddress)
+  }, [])
+
   const navigate = (nextPage) => { window.location.hash = `/${nextPage}`; setPage(nextPage); window.scrollTo(0, 0) }
   const detailWorkout = workouts.find((workout) => workout.slug === page)
-  return <div className="app-shell"><Header page={detailWorkout ? 'workouts' : page} onNavigate={navigate} /><main>{page === 'home' && <Home onNavigate={navigate} />}{page === 'schedule' && <Schedule onNavigate={navigate} />}{page === 'workouts' && <Workouts onNavigate={navigate} />}{detailWorkout && <WorkoutDetail workout={detailWorkout} onNavigate={navigate} />}</main><Footer onNavigate={navigate} /></div>
+  // key={page} gives the header a fresh state on every page change, so an open mobile menu closes when the user goes back.
+  return <div className="app-shell"><Header key={page} page={detailWorkout ? 'workouts' : page} onNavigate={navigate} /><main>{page === 'home' && <Home onNavigate={navigate} />}{page === 'schedule' && <Schedule onNavigate={navigate} />}{page === 'workouts' && <Workouts onNavigate={navigate} />}{detailWorkout && <WorkoutDetail workout={detailWorkout} onNavigate={navigate} />}</main><Footer onNavigate={navigate} /></div>
 }
 
 export default App
