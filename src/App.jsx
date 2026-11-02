@@ -42,7 +42,10 @@ function Header({ page, onNavigate }) {
 
   const isMobileNav = () => window.matchMedia('(max-width: 760px)').matches
 
-  return <header className="site-header"><div className="header-inner"><button className="brand" onClick={() => { onNavigate('home'); closeMenu() }} aria-label="ATOM My Fitness - начало"><AtomLogo subtitle /></button><button className="mobile-toggle" onClick={toggleMenu} aria-label="Отвори меню">{menuOpen ? '×' : '☰'}</button><nav className={menuOpen ? 'main-nav is-open' : 'main-nav'}><button className={page === 'home' ? 'nav-link active' : 'nav-link'} onClick={() => { onNavigate('home'); closeMenu() }}>Начало</button><button className={page === 'schedule' ? 'nav-link active' : 'nav-link'} onClick={() => { onNavigate('schedule'); closeMenu() }}>Програма</button><div className={workoutMenuOpen ? 'workout-menu is-open' : 'workout-menu'} onMouseEnter={() => { if (!isMobileNav()) setWorkoutMenuOpen(true) }} onMouseLeave={() => { if (!isMobileNav()) setWorkoutMenuOpen(false) }} onFocusCapture={() => { if (!isMobileNav()) setWorkoutMenuOpen(true) }} onBlurCapture={(event) => { if (!isMobileNav() && !event.currentTarget.contains(event.relatedTarget)) setWorkoutMenuOpen(false) }}><button className={page === 'workouts' ? 'nav-link active' : 'nav-link'} aria-expanded={workoutMenuOpen} onClick={() => { if (isMobileNav()) setWorkoutMenuOpen((open) => !open); else { onNavigate('workouts'); closeMenu() } }}>Групови тренировки <ChevronDown className="chevron" size={14} strokeWidth={2} aria-hidden="true" /></button><div className="dropdown">{workouts.map((workout) => <button key={workout.slug} onClick={() => { onNavigate(workout.slug); closeMenu() }}><span>{workout.name}</span></button>)}</div></div><a className="phone-pill" href="tel:0894026402">089 402 6402</a></nav></div></header>
+  // Tapping empty space in the header bar (not a button or the menu itself) closes the menu.
+  const closeOnEmptyHeaderTap = (event) => { if (menuOpen && event.target === event.currentTarget) closeMenu() }
+
+  return <><header className="site-header" onClick={closeOnEmptyHeaderTap}><div className="header-inner" onClick={closeOnEmptyHeaderTap}><button className="brand" onClick={() => { onNavigate('home'); closeMenu() }} aria-label="ATOM My Fitness - начало"><AtomLogo subtitle /></button><button className="mobile-toggle" onClick={toggleMenu} aria-label="Отвори меню">{menuOpen ? '×' : '☰'}</button><nav className={menuOpen ? 'main-nav is-open' : 'main-nav'}><button className={page === 'home' ? 'nav-link active' : 'nav-link'} onClick={() => { onNavigate('home'); closeMenu() }}>Начало</button><button className={page === 'schedule' ? 'nav-link active' : 'nav-link'} onClick={() => { onNavigate('schedule'); closeMenu() }}>Програма</button><div className={workoutMenuOpen ? 'workout-menu is-open' : 'workout-menu'} onMouseEnter={() => { if (!isMobileNav()) setWorkoutMenuOpen(true) }} onMouseLeave={() => { if (!isMobileNav()) setWorkoutMenuOpen(false) }} onFocusCapture={() => { if (!isMobileNav()) setWorkoutMenuOpen(true) }} onBlurCapture={(event) => { if (!isMobileNav() && !event.currentTarget.contains(event.relatedTarget)) setWorkoutMenuOpen(false) }}><button className={page === 'workouts' ? 'nav-link active' : 'nav-link'} aria-expanded={workoutMenuOpen} onClick={() => { if (isMobileNav()) setWorkoutMenuOpen((open) => !open); else { onNavigate('workouts'); closeMenu() } }}>Групови тренировки <ChevronDown className="chevron" size={14} strokeWidth={2} aria-hidden="true" /></button><div className="dropdown">{workouts.map((workout) => <button key={workout.slug} onClick={() => { onNavigate(workout.slug); closeMenu() }}><span>{workout.name}</span></button>)}</div></div><a className="phone-pill" href="tel:0894026402">089 402 6402</a></nav></div></header>{/* While the phone menu is open, a see-through layer covers the page: tapping it closes the menu instead of tapping whatever is underneath. */}{menuOpen && <div className="menu-backdrop" onClick={closeMenu} aria-hidden="true" />}</>
 }
 
 function Footer({ onNavigate }) {
@@ -65,14 +68,30 @@ function workoutSlugFromClass(className) {
   return null
 }
 
+const groupPrices = [
+  { visits: '1 посещение', price: 7 },
+  { visits: '8 посещения', price: 47 },
+  { visits: '12 посещения', price: 55 },
+]
+
 function Schedule({ onNavigate }) {
   return (
     <section className="page-section schedule-page">
-      <span className="eyebrow">ГРАФИК</span>
       <h1>Седмична програма</h1>
       <p className="lead">
         Разгледай кога се провеждат груповите тренировки. Часовете може да се променят по празници — за актуален график се обади на <a href="tel:0894026402">089 402 6402</a>.
       </p>
+      <section className="price-panel" aria-labelledby="group-prices-title">
+        <h2 className="eyebrow" id="group-prices-title">Цени групови</h2>
+        <ul className="price-list">
+          {groupPrices.map(({ visits, price }) => (
+            <li className="price-card" key={visits}>
+              <span className="price-visits">{visits}</span>
+              <strong className="price-amount">{price}{' '}<span className="price-currency">€</span></strong>
+            </li>
+          ))}
+        </ul>
+      </section>
       <div className="schedule-grid">
         {schedule.map((day) => (
           <article className="day-card" key={day.day}>
