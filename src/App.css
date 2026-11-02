@@ -86,3 +86,38 @@
 @media (max-width: 760px) {
   .menu-backdrop { display:block; position:fixed; inset:0; z-index:9; background:rgba(15,20,28,.28); }
 }
+
+/* Home page: blurred, slowly moving photo behind the dark top section. */
+.hero-band { position:relative; overflow:hidden; background:var(--ink); isolation:isolate; }
+.hero-band .hero { position:relative; z-index:1; background:transparent; box-shadow:none; clip-path:none; }
+.hero-bg { position:absolute; inset:0; z-index:0; pointer-events:none; }
+.hero-bg span { position:absolute; inset:-8%; background-size:cover; background-position:center; filter:blur(10px) saturate(1.1); will-change:transform; }
+/* Dark shade on top of the photo so the white text stays easy to read (darkest behind the text). */
+.hero-bg::after { content:''; position:absolute; inset:0; z-index:1; background:linear-gradient(90deg, rgba(15,20,28,.93) 0%, rgba(15,20,28,.8) 45%, rgba(15,20,28,.6) 100%); }
+@media (max-width: 760px) { .hero-bg::after { background:linear-gradient(180deg, rgba(15,20,28,.9) 0%, rgba(15,20,28,.78) 55%, rgba(15,20,28,.68) 100%); } }
+
+/* A: one photo, slow zoom in and out */
+.hero-bg-a span { animation:hero-slow-zoom 28s ease-in-out infinite alternate; }
+@keyframes hero-slow-zoom { from { transform:scale(1.04) translate(0,0); } to { transform:scale(1.18) translate(-2.5%,-2%); } }
+
+/* B: four workout photos fading one into the next, each slowly zooming */
+.hero-bg-b span { opacity:0; animation:hero-slideshow 24s linear infinite; }
+@keyframes hero-slideshow { 0% { opacity:0; transform:scale(1.04); } 7% { opacity:1; } 25% { opacity:1; } 32% { opacity:0; transform:scale(1.14); } 100% { opacity:0; transform:scale(1.14); } }
+
+/* C: photo drifting sideways, extra blur, with a soft orange ATOM glow that slowly breathes */
+.hero-bg-c span { filter:blur(16px) saturate(1.15); animation:hero-drift 40s ease-in-out infinite alternate; }
+.hero-bg-c::before { content:''; position:absolute; inset:0; z-index:2; background:radial-gradient(circle at 78% 35%, rgba(255,138,36,.34), transparent 55%); animation:hero-glow 9s ease-in-out infinite alternate; }
+@keyframes hero-drift { from { transform:scale(1.12) translateX(-5%); } to { transform:scale(1.12) translateX(5%); } }
+@keyframes hero-glow { from { opacity:.45; } to { opacity:1; } }
+
+/* D: lighter blur so the photo is more recognisable, slow sideways pan, darker shade */
+.hero-bg-d span { filter:blur(3px) saturate(1.05); animation:hero-pan 45s ease-in-out infinite alternate; }
+.hero-bg-d::after { background:linear-gradient(90deg, rgba(15,20,28,.95) 0%, rgba(15,20,28,.86) 45%, rgba(15,20,28,.72) 100%); }
+@media (max-width: 760px) { .hero-bg-d::after { background:linear-gradient(180deg, rgba(15,20,28,.93), rgba(15,20,28,.8)); } }
+@keyframes hero-pan { from { transform:scale(1.15) translateX(-4%); } to { transform:scale(1.15) translateX(4%); } }
+
+/* Visitors who switch off animations on their phone/computer get a still photo instead. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg span, .hero-bg-c::before { animation:none !important; }
+  .hero-bg-b span:first-child { opacity:1; }
+}
