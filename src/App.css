@@ -62,3 +62,27 @@
   from { opacity:0; transform:translateY(16px) scale(.94); }
   to { opacity:1; transform:translateY(0) scale(1); }
 }
+
+/* Group prices on the Програма page: white cards inside a soft orange box (same peach as the
+   note under the schedule), so the prices read as their own section, separate from the schedule. */
+.price-panel { margin-top:42px; background:#fff0df; border:1px solid #ffd4ad; border-radius:20px; padding:22px 22px 24px; }
+.price-panel + .schedule-grid { margin-top:48px; }
+.price-panel h2.eyebrow { display:block; margin:0 0 14px; }
+.price-list { list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:15px; }
+.price-card { background:white; border:1px solid #ffd4ad; border-radius:17px; padding:20px 17px; display:flex; flex-direction:column; gap:12px; }
+.price-visits { color:#53606d; font-size:13px; font-weight:600; }
+.price-amount { color:var(--ink); font-size:36px; line-height:1; font-weight:500; letter-spacing:-1.2px; }
+.price-currency { color:#d97706; font-weight:700; }
+@media (max-width: 760px) {
+  .price-panel { margin-top:34px; padding:18px 14px 16px; border-radius:18px; }
+  .price-panel + .schedule-grid { margin-top:34px; }
+  .price-list { grid-template-columns:1fr; gap:8px; }
+  .price-card { flex-direction:row; justify-content:space-between; align-items:center; padding:14px 17px; border-radius:12px; }
+  .price-amount { font-size:26px; letter-spacing:-.8px; }
+}
+
+/* Phone menu: see-through layer behind the open menu; tapping it closes the menu. */
+.menu-backdrop { display:none; }
+@media (max-width: 760px) {
+  .menu-backdrop { display:block; position:fixed; inset:0; z-index:9; background:rgba(15,20,28,.28); }
+}
