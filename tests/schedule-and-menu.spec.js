@@ -28,6 +28,24 @@ test.describe('Програма page', () => {
     expect(scheduleBox.y).toBeGreaterThan(pricesBox.y + pricesBox.height - 1)
   })
 
+  test('prices sit in their own soft orange box, separate from the schedule', async ({ page }) => {
+    await page.goto('/#/schedule')
+    const prices = page.getByRole('region', { name: 'Цени групови' })
+    const box = await prices.evaluate((el) => {
+      const s = getComputedStyle(el)
+      return { background: s.backgroundColor, border: s.borderTopColor, borderWidth: s.borderTopWidth, radius: parseFloat(s.borderTopLeftRadius) }
+    })
+    expect(box.background).toBe('rgb(255, 240, 223)') // same peach as the note under the schedule
+    expect(box.border).toBe('rgb(255, 212, 173)')
+    expect(box.borderWidth).toBe('1px')
+    expect(box.radius).toBeGreaterThan(10)
+
+    // Clear gap between the box and the weekly schedule.
+    const pricesBox = await prices.boundingBox()
+    const scheduleBox = await page.locator('main .schedule-grid').boundingBox()
+    expect(scheduleBox.y - (pricesBox.y + pricesBox.height)).toBeGreaterThanOrEqual(30)
+  })
+
   test('price cards fit on screen without sideways scrolling', async ({ page }) => {
     await page.goto('/#/schedule')
     await expect(page.getByRole('region', { name: 'Цени групови' })).toBeVisible()
