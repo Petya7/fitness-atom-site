@@ -52,15 +52,16 @@ function Footer({ onNavigate }) {
   return <footer className="site-footer"><div className="footer-grid"><div><button className="footer-brand" onClick={() => onNavigate('home')} aria-label="ATOM My Fitness - начало"><AtomLogo footer /></button><p>Зала за групови тренировки<br />в сърцето на Овча купел.<br />Тренираме заедно.</p><div className="socials"><a href="https://www.facebook.com/FitnessAtom" target="_blank" rel="noreferrer">f</a></div></div><div><h4>Навигация</h4><button onClick={() => onNavigate('home')}>Начало</button><button onClick={() => onNavigate('schedule')}>Програма</button><button onClick={() => onNavigate('workouts')}>Групови тренировки</button></div><div><h4>Тренировки</h4>{workouts.map((workout) => <button key={workout.slug} onClick={() => onNavigate(workout.slug)}>{workout.name}</button>)}</div><div><h4>Контакти</h4><p className="contact-line"><MapPin className="contact-icon" size={15} strokeWidth={2} /><span>ж.к. Овча купел, бл. 430<br />София 1632</span></p><p className="contact-line"><Phone className="contact-icon" size={15} strokeWidth={2} /><a href="tel:0894026402">089 402 6402</a></p><p className="contact-line"><Clock3 className="contact-icon" size={15} strokeWidth={2} /><span>Понеделник – Неделя<br />07:00 – 22:00</span></p><span className="multisport">✓ MultiSport партньор</span></div></div><div className="footer-bottom"><span>© 2026 ATOM My Fitness. Всички права запазени.</span><span>Партньор на MultiSport</span></div></footer>
 }
 
-// TEMPORARY, for choosing a design: ?hero=a|b|c|d|none in the address switches the home page background.
+// TEMPORARY, for choosing a design: ?hero=a|b|b1|b2|b3|c|d|none in the address switches the home page background.
 const heroOption = new URLSearchParams(window.location.search).get('hero')?.toLowerCase() || 'a'
 const heroSlideshowPhotos = ['/assets/pexels/home-group-fitness.jpg', '/assets/pexels/tabata.jpg', '/assets/pexels/folk-dance.jpg', '/assets/pexels/yoga.jpg']
 
 // Blurred, slowly moving photo behind the home page's dark top section. Decorative only.
 function HeroBackground({ option }) {
   if (option === 'none') return null
-  const photos = option === 'b' ? heroSlideshowPhotos : ['/assets/pexels/home-group-fitness.jpg']
-  return <div className={`hero-bg hero-bg-${option}`} aria-hidden="true">{photos.map((src, i) => <span key={src} style={{ backgroundImage: `url(${src})`, animationDelay: option === 'b' ? `${i * 6}s` : undefined }} />)}</div>
+  const isSlideshow = option.startsWith('b')
+  const photos = isSlideshow ? heroSlideshowPhotos : ['/assets/pexels/home-group-fitness.jpg']
+  return <div className={`hero-bg hero-bg-${option}${isSlideshow ? ' hero-bg-b' : ''}`} aria-hidden="true">{photos.map((src, i) => <span key={src} style={{ backgroundImage: `url(${src})`, animationDelay: isSlideshow ? `${i * 6}s` : undefined }} />)}</div>
 }
 
 function Home({ onNavigate }) {

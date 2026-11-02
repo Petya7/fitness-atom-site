@@ -121,3 +121,16 @@
   .hero-bg span, .hero-bg-c::before { animation:none !important; }
   .hero-bg-b span:first-child { opacity:1; }
 }
+
+/* B, clearer versions: same changing photos, less blur so it's visible these are gym photos.
+   The shade is darkest behind the text and lighter elsewhere, and the text gets a soft shadow. */
+.hero-bg-b1 span { filter:blur(4px) saturate(1.1); }
+.hero-bg-b2 span { filter:blur(1.5px) saturate(1.1); }
+.hero-bg-b3 span { filter:none; }
+.hero-bg-b1::after, .hero-bg-b2::after, .hero-bg-b3::after { background:linear-gradient(90deg, rgba(15,20,28,.88) 0%, rgba(15,20,28,.72) 40%, rgba(15,20,28,.42) 75%, rgba(15,20,28,.35) 100%); }
+.hero-bg-b3::after { background:linear-gradient(90deg, rgba(15,20,28,.9) 0%, rgba(15,20,28,.76) 40%, rgba(15,20,28,.48) 75%, rgba(15,20,28,.4) 100%); }
+@media (max-width: 760px) {
+  .hero-bg-b1::after, .hero-bg-b2::after { background:linear-gradient(180deg, rgba(15,20,28,.8) 0%, rgba(15,20,28,.7) 55%, rgba(15,20,28,.5) 100%); }
+  .hero-bg-b3::after { background:linear-gradient(180deg, rgba(15,20,28,.84) 0%, rgba(15,20,28,.74) 55%, rgba(15,20,28,.55) 100%); }
+}
+.hero-band:has(.hero-bg-b1, .hero-bg-b2, .hero-bg-b3) .hero-copy { text-shadow:0 2px 18px rgba(0,0,0,.45); }
