@@ -103,3 +103,17 @@
   .hero-bg-photo { animation:none; }
   .hero-bg-photo:first-child { opacity:1; transform:scale(1.04); }
 }
+
+/* Footer social icons */
+.socials a { color:#adbac6; transition:color .15s, border-color .15s; }
+.socials a:hover { color:var(--orange); border-color:var(--orange); }
+
+/* "Последвай ни" block on the home page: label + the original round Facebook and Instagram logos */
+.follow-section { max-width:var(--max); margin:0 auto; padding:10px 30px 0; text-align:center; }
+.follow-section h2.eyebrow { display:block; margin:0 0 18px; }
+.follow-logos { display:flex; justify-content:center; gap:20px; }
+.follow-logos a { display:block; border-radius:50%; transition:transform .15s, box-shadow .15s; }
+.follow-logos a:hover, .follow-logos a:focus-visible { transform:translateY(-3px); box-shadow:0 10px 22px rgba(15,20,28,.18); }
+.follow-logos a:focus-visible { outline:3px solid var(--orange); outline-offset:3px; }
+.follow-logos img { display:block; width:64px; height:64px; }
+@media (max-width: 760px) { .follow-section { padding:0 20px; } .follow-logos img { width:56px; height:56px; } }
