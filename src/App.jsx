@@ -22,7 +22,7 @@ function FollowUs() {
 
 
 const workouts = [
-  { slug: 'tabata', name: 'Табата', label: 'Висока интензивност', duration: '45 мин', description: 'Кратки, интензивни интервали, които горят калории и изграждат издръжливост.', accent: 'orange', icon: '◉', image: '/assets/pexels/tabata.jpg', focus: 'Издръжливост, сила и тонус', benefits: ['Ускорява метаболизма', 'Подобрява издръжливостта', 'Тренира цялото тяло'], suitable: 'За хора, които обичат динамиката и искат резултатна тренировка за кратко време.' },
+  { slug: 'tabata', reel: 'https://www.instagram.com/p/DfWjGYkR-fu/', name: 'Табата', label: 'Висока интензивност', duration: '45 мин', description: 'Кратки, интензивни интервали, които горят калории и изграждат издръжливост.', accent: 'orange', icon: '◉', image: '/assets/pexels/tabata.jpg', focus: 'Издръжливост, сила и тонус', benefits: ['Ускорява метаболизма', 'Подобрява издръжливостта', 'Тренира цялото тяло'], suitable: 'За хора, които обичат динамиката и искат резултатна тренировка за кратко време.' },
   { slug: 'fitball', name: 'Фитбол', label: 'Средна интензивност', duration: '50 мин', description: 'Тренировка с гимнастическа топка за стабилен корем и здрав гръб.', accent: 'coral', icon: '◯', image: '/assets/pexels/fitball.jpg', focus: 'Стабилност, баланс и коремни мускули', benefits: ['Укрепва корема и гърба', 'Подобрява баланса и стойката', 'Щади ставите'], suitable: 'За всеки, който иска да изгради стабилност с плавни и контролирани движения.' },
   { slug: 'yoga', name: 'Йога', label: 'Ниска интензивност', duration: '60 мин', description: 'Дишане, гъвкавост и вътрешен баланс в спокойна атмосфера.', accent: 'orange', icon: '✦', image: '/assets/pexels/yoga.jpg', focus: 'Гъвкавост, баланс и спокойно дишане', benefits: ['Освобождава напрежението', 'Подобрява гъвкавостта', 'Връща фокуса към тялото'], suitable: 'За начинаещи и напреднали, които търсят по-спокоен ритъм и време за себе си.' },
   { slug: 'pilates', name: 'Пилатес', label: 'Средна интензивност', duration: '50 мин', description: 'Контролирани движения за сила, стойка и по-добра връзка с тялото.', accent: 'coral', icon: '◒', image: '/assets/pexels/pilates.jpg', focus: 'Контрол, стойка и дълбока сила', benefits: ['Укрепва центъра на тялото', 'Подобрява стойката', 'Развива прецизен контрол'], suitable: 'За всеки, който иска да се движи по-осъзнато и да изгради стабилна основа.' },
@@ -147,6 +147,21 @@ function Schedule({ onNavigate }) {
 
 function Workouts({ onNavigate }) { return <section className="page-section workouts-page"><span className="eyebrow">НАШИЯТ ФОКУС</span><h1>Групови тренировки</h1><p className="lead">В ATOM залагаме на груповите тренировки, защото те съчетават мотивация, професионално ръководство и добро настроение.</p><div className="all-workouts">{workouts.map((workout, index) => <WorkoutCard key={workout.slug} workout={workout} index={index % 3} onClick={() => onNavigate(workout.slug)} />)}</div></section> }
 
+// Instagram reel with a cover and a play button. Instagram's player (and its cookies) loads only
+// after the visitor taps play, so nothing is sent to Instagram just for opening the page.
+function InstagramReel({ url, cover, name }) {
+  const [playing, setPlaying] = useState(false)
+  return <section className="detail-reel" aria-labelledby="reel-title">
+    <h2 id="reel-title">Вижте ни в действие</h2>
+    <div className="reel-card">
+      {playing
+        ? <iframe src={`${url}embed/`} title={`Instagram видео: ${name} в ATOM`} allow="autoplay; encrypted-media; picture-in-picture" allowFullScreen loading="lazy" />
+        : <button className="reel-cover" style={{ backgroundImage: `url(${cover})` }} onClick={() => setPlaying(true)} aria-label={`Пусни видеото: ${name} в ATOM`}><span className="reel-play" aria-hidden="true"><svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" /></svg></span><span className="reel-badge" aria-hidden="true"><img src="/assets/social/instagram.png" alt="" width="20" height="20" />Reel</span></button>}
+    </div>
+    <a className="reel-link" href={url} target="_blank" rel="noreferrer">Гледай в Instagram ↗</a>
+  </section>
+}
+
 function WorkoutDetail({ workout, onNavigate }) {
   const factItems = [
     { icon: Flame, label: 'ИНТЕНЗИВНОСТ', value: workout.label.replace(' интензивност', '') },
@@ -154,7 +169,7 @@ function WorkoutDetail({ workout, onNavigate }) {
     { icon: Clock3, label: 'ПРОДЪЛЖИТЕЛНОСТ', value: workout.duration },
   ]
 
-  return <><section className="detail-hero" style={{ '--detail-bg': `url(${workout.image})` }}><div className="detail-hero-inner"><div className="detail-hero-copy"><button className="back-link" onClick={() => onNavigate('workouts')}>Всички тренировки</button><span className="eyebrow">ГРУПОВА ТРЕНИРОВКА</span><h1>{workout.name}</h1><p>{workout.description}</p></div><div className="detail-hero-image"><img src={workout.image} alt={`Илюстрация за ${workout.name}`} /></div></div></section><section className="detail-facts"><div className="detail-facts-inner">{factItems.map(({ icon: Icon, label, value }) => <div className="fact-item" key={label}><span className="fact-icon"><Icon size={16} strokeWidth={1.8} /></span><div className="fact-copy"><small>{label}</small><strong>{value}</strong></div></div>)}</div></section><section className="detail-content"><div><span className="eyebrow">В ДЕТАЙЛ</span><h2>Какво представлява</h2><p>{workout.description} В ATOM тренировката е водена от инструктор и е съобразена с ритъма на групата.</p><p>{workout.suitable}</p><div className="detail-note"><strong>Няма нужда да си професионалист.</strong><br />Ела с удобни дрехи, добро настроение и желание за движение.</div></div><aside className="benefits-card"><h3>Какво печелиш</h3>{workout.benefits.map((benefit) => <p key={benefit}>✓ &nbsp; {benefit}</p>)}<hr /><small>Искаш да пробваш {workout.name}?</small><a className="button primary" href="tel:0894026402">Запиши се: 089 402 6402</a><button className="button secondary light" onClick={() => onNavigate('schedule')}>Виж програмата</button></aside></section></> }
+  return <><section className="detail-hero" style={{ '--detail-bg': `url(${workout.image})` }}><div className="detail-hero-inner"><div className="detail-hero-copy"><button className="back-link" onClick={() => onNavigate('workouts')}>Всички тренировки</button><span className="eyebrow">ГРУПОВА ТРЕНИРОВКА</span><h1>{workout.name}</h1><p>{workout.description}</p></div><div className="detail-hero-image"><img src={workout.image} alt={`Илюстрация за ${workout.name}`} /></div></div></section><section className="detail-facts"><div className="detail-facts-inner">{factItems.map(({ icon: Icon, label, value }) => <div className="fact-item" key={label}><span className="fact-icon"><Icon size={16} strokeWidth={1.8} /></span><div className="fact-copy"><small>{label}</small><strong>{value}</strong></div></div>)}</div></section><section className="detail-content"><div><span className="eyebrow">В ДЕТАЙЛ</span><h2>Какво представлява</h2><p>{workout.description} В ATOM тренировката е водена от инструктор и е съобразена с ритъма на групата.</p><p>{workout.suitable}</p><div className="detail-note"><strong>Няма нужда да си професионалист.</strong><br />Ела с удобни дрехи, добро настроение и желание за движение.</div></div><aside className="benefits-card"><h3>Какво печелиш</h3>{workout.benefits.map((benefit) => <p key={benefit}>✓ &nbsp; {benefit}</p>)}<hr /><small>Искаш да пробваш {workout.name}?</small><a className="button primary" href="tel:0894026402">Запиши се: 089 402 6402</a><button className="button secondary light" onClick={() => onNavigate('schedule')}>Виж програмата</button></aside></section>{workout.reel && <InstagramReel url={workout.reel} cover={workout.image} name={workout.name} />}</> }
 
 const pageFromHash = () => window.location.hash.replace('#/', '') || 'home'
 
