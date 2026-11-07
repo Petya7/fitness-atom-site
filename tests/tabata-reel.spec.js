@@ -40,6 +40,15 @@ test.describe('Instagram reel on the Табата page', () => {
     expect(cardBox.height).toBeGreaterThan(cardBox.width * 1.5)
   })
 
+  test('the cover is a frame from the reel, and it loads', async ({ page }) => {
+    await page.goto('/#/tabata')
+    const cover = reelSection(page).locator('.reel-cover')
+    await expect(cover).toHaveCSS('background-image', /\/assets\/reels\/tabata-reel-cover\.jpg/)
+    const response = await page.request.get('/assets/reels/tabata-reel-cover.jpg')
+    expect(response.ok()).toBe(true)
+    expect(response.headers()['content-type']).toContain('image/jpeg')
+  })
+
   test('loads nothing from Instagram until the visitor taps play', async ({ page }) => {
     const instagramRequests = []
     page.on('request', (r) => { if (r.url().includes('instagram.com')) instagramRequests.push(r.url()) })
